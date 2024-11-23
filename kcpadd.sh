@@ -111,5 +111,5 @@ echo "server-config-${remote_tag}.json started."
 get_kcptun_client_config
 echo '##########'
 echo 'Add more kcptun config:'
-echo 'bash <(wget -qO- https://raw.githubusercontent.com/devtonull/ss/main/kcpadd.sh)'
+echo 'bash <(wget -qO- https://raw.githubusercontent.com/devtonull/sskcp/main/kcpadd.sh)'
 exit
