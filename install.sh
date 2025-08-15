@@ -78,8 +78,9 @@ install_kcptun() {
     # # isntall kcptun
     mkdir -p /usr/local/kcptun
     cd /usr/local/kcptun
-    wget https://github.com/xtaci/kcptun/releases/download/v20241119/kcptun-linux-amd64-20241119.tar.gz
-    tar -zxvf kcptun-linux-amd64-20241119.tar.gz
+    # wget https://github.com/xtaci/kcptun/releases/download/v20241119/kcptun-linux-amd64-20241119.tar.gz
+    wget https://github.com/xtaci/kcptun/releases/download/v20241119/kcptun-linux-amd64-20250730.tar.gz
+    tar -zxvf kcptun-linux-amd64-20250730.tar.gz
 
     # set kcptun port/password
     kcport=$(shuf -i 20000-29999 -n 1)
