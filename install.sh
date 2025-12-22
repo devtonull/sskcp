@@ -9,7 +9,7 @@
 update_install() {
     mkdir -p /var/log/apt/
     apt update && apt upgrade -y
-    apt install snapd ufw jq -y
+    apt install snapd ufw -y
     snap install core
 }
 
@@ -209,9 +209,9 @@ get_shadowsocks_local_config() {
     ss_url="ss://${baseurl}#$(get_ip)"
     echo '#### ss-local url:'
     echo -e "\033[1;33m${ss_url}\033[0m"
-    echo 'or'
+    echo '[or]'
     echo '#### ss-local json:'
-    echo -e '\033[1;33m{ "server": "'${ss_ip}'", "server_port": '${ssport}', "local_address": "0.0.0.0", "local_port": 1080, "password": "'${sspwd}'", "method": "'${method}'", "mode": "tcp_and_udp", "fast_open": false }\033[0m' | jq .
+    echo -e '\033[1;33m{ "server": "'${ss_ip}'", "server_port": '${ssport}', "local_address": "0.0.0.0", "local_port": 1080, "password": "'${sspwd}'", "method": "'${method}'", "mode": "tcp_and_udp", "fast_open": false }\033[0m'
     echo ''
 }
 
