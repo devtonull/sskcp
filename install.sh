@@ -9,7 +9,7 @@
 update_install() {
     mkdir -p /var/log/apt/
     apt update && apt upgrade -y
-    apt install snapd ufw -y
+    apt install snapd ufw jq -y
     snap install core
 }
 
@@ -33,7 +33,7 @@ install_shadowsocks() {
     method=${arr[$rand]}
     # # install shadowsocks
     snap install shadowsocks-libev
-    # # make ss config file
+    # # make ss-server config file
     mkdir -p /var/snap/shadowsocks-libev/common/etc/shadowsocks-libev
     cat >/var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json <<EOF
 {
@@ -197,8 +197,8 @@ set_log_ssh() {
     ufw deny ssh
 }
 
-# # get shadowsocks config
-get_shadowsocks_config() {
+# # get ss-local config
+get_shadowsocks_local_config() {
     echo ''
     if [[ -f "/usr/local/kcptun/server-config.json" ]]; then
         ss_ip='127.0.0.1'
@@ -207,20 +207,27 @@ get_shadowsocks_config() {
     fi
     baseurl=$(echo -n "${method}:${sspwd}@${ss_ip}:${ssport}" | base64 -w0)
     ss_url="ss://${baseurl}#$(get_ip)"
-    echo '#### shadowsocks url is:'
+    echo '#### ss-local url:'
     echo -e "\033[1;33m${ss_url}\033[0m"
+    echo 'or'
+    echo '#### ss-local json:'
+    echo -e '\033[1;33m{ "server": "'${ss_ip}'", "server_port": '${ssport}', "local_address": "0.0.0.0", "local_port": 1080, "password": "'${sspwd}'", "method": "'${method}'", "mode": "tcp_and_udp", "fast_open": false }\033[0m' | jq .
     echo ''
 }
 
 # # get kcptun config
-get_kcptun_config() {
-    view_kcptunconfig=$(cat /usr/local/kcptun/client-config.json)
-    echo '#### kcptun client config is:'
-    echo -e "\033[1;33m${view_kcptunconfig}\033[0m"
+get_kcptun_client_config() {
+    kcptun_server_config=$(cat /usr/local/kcptun/client-config.json)
+    echo '#### kcptun client config:'
+    echo -e "\033[1;33m${kcptun_server_config}\033[0m"
     echo ''
+}
+
+# # get mobile config
+get_mobile_config() {
     mbaseurl=$(echo -n "${method}:${sspwd}@$(get_ip):${kcport}" | base64 -w0)
     ss_m_url="ss://${mbaseurl}#$(get_ip)"
-    echo '#### mobile shadowsocks url is:'
+    echo '#### mobile ss-local url:'
     echo -e "\033[1;33m${ss_m_url}\033[0m"
     echo ''
     echo '#### mobile kcptun client config:'
@@ -243,8 +250,9 @@ default_install() {
     set_crontab
     set_ufw
     set_log_ssh
-    get_shadowsocks_config
-    get_kcptun_config
+    get_shadowsocks_local_config
+    get_kcptun_client_config
+    get_mobile_config
 }
 
 echo "Choose install:"
@@ -261,13 +269,13 @@ elif [[ '2' = "$install" ]]; then
     update_install
     install_shadowsocks
     ufw allow ${ssport}
-    get_shadowsocks_config
+    get_shadowsocks_local_config
 elif [[ '3' = "$install" ]]; then
     install_kcptun
     if command -v ufw >/dev/null 2>&1; then
         ufw allow ${kcport}
     fi
-    get_kcptun_config
+    get_kcptun_client_config
 elif [[ '4' = "$install" ]]; then
     add_more_kcptun
 else
