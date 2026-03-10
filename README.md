@@ -1,7 +1,7 @@
 # shadowsocks + kcptun
 <br>
-<b>Recommended installation in Screen.</b>
-<br>
+<b>Recommended installation in <code>screen</code>.</b>
+<br><br>
 <pre>
 apt update && apt upgrade -y
 </pre>
