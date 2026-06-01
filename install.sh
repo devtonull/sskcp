@@ -197,7 +197,7 @@ set_log_ssh() {
     ufw deny ssh
 }
 
-# # get ss-local config
+# # get ss-client config
 get_shadowsocks_local_config() {
     echo ''
     if [[ -f "/usr/local/kcptun/server-config.json" ]]; then
@@ -207,10 +207,10 @@ get_shadowsocks_local_config() {
     fi
     baseurl=$(echo -n "${method}:${sspwd}@${ss_ip}:${ssport}" | base64 -w0)
     ss_url="ss://${baseurl}#$(get_ip)"
-    echo '#### ss-local url:'
+    echo '#### ss-client url:'
     echo -e "\033[1;33m${ss_url}\033[0m"
     echo '[or]'
-    echo '#### ss-local json:'
+    echo '#### ss-client json:'
     echo -e '\033[1;33m{ "server": "'${ss_ip}'", "server_port": '${ssport}', "local_address": "0.0.0.0", "local_port": 1080, "password": "'${sspwd}'", "method": "'${method}'", "mode": "tcp_and_udp", "fast_open": false }\033[0m'
     echo ''
 }
@@ -218,7 +218,7 @@ get_shadowsocks_local_config() {
 # # get kcptun config
 get_kcptun_client_config() {
     kcptun_server_config=$(cat /usr/local/kcptun/client-config.json)
-    echo '#### kcptun client config:'
+    echo '#### kcptun-client config:'
     echo -e "\033[1;33m${kcptun_server_config}\033[0m"
     echo ''
 }
@@ -227,10 +227,10 @@ get_kcptun_client_config() {
 get_mobile_config() {
     mbaseurl=$(echo -n "${method}:${sspwd}@$(get_ip):${kcport}" | base64 -w0)
     ss_m_url="ss://${mbaseurl}#$(get_ip)"
-    echo '#### mobile ss-local url:'
+    echo '#### mobile ss-client url:'
     echo -e "\033[1;33m${ss_m_url}\033[0m"
     echo ''
-    echo '#### mobile kcptun client config:'
+    echo '#### mobile kcptun-client config:'
     kcptun_m_config="mode=fast;key=${kcpwd};crypt=aes;mtu=1350;sndwnd=1024;rcvwnd=1024;datashard=70;parityshard=30;dscp=46;interval=40;sockbuf=16777217;keepalive=10"
     echo -e "\033[1;33m${kcptun_m_config}\033[0m"
     echo ''
