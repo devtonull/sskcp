@@ -238,6 +238,22 @@ get_mobile_config() {
     echo 'bash <(wget -qO- https://raw.githubusercontent.com/devtonull/sskcp/refs/heads/main/kcpadd.sh)'
 }
 
+# # get mobile qr shadowsocks+kcptun (android)
+get_mobile_qr_android_shadowsocks_kcptun() {
+    local qrbaseurl=$(echo -n "${method}:${sspwd}" | base64 -w0)
+    local qr_url="ss://${qrbaseurl}@$(get_ip):${kcport}?plugin=kcptun%3Bmode%3Dfast%3Bdscp%3D46%3Bsockbuf%3D16777217%3Bcrypt%3Daes%3Bkeepalive%3D10%3Bparityshard%3D30%3Brcvwnd%3D1024%3Binterval%3D40%3Bkey%3D${kcpwd}%3Bsndwnd%3D1024%3Bmtu%3D1350%3Bdatashard%3D70"
+    echo "$qr_url" >/usr/local/kcptun/mobile_qr_android_shadowsocks_kcptun.txt
+}
+
+# # get mobile qr shadowrocket (ios)
+get_mobile_qr_ios_shadowrocket() {
+    local qrbaseurl=$(echo -n "${method}:${sspwd}@$(get_ip):${kcport}" | base64 -w0)
+    local qrbaseurl_kcp=`echo -n '{"crypt":"aes","datashard":"70","keepalive":"10","rcvwnd":"1024","dscp":"46","parityshard":"30","autoexpire":"0","key":"'${kcpwd}'","address":"'$(get_ip)'","mode":"fast","nocomp":false,"sndwnd":"1024","smuxver":"1","mtu":"1350","port":"'${kcport}'"}' | base64 -w0`
+    
+    local qr_url="ss://${qrbaseurl}?tfo=1&uot=2&kcptun=${qrbaseurl_kcp}"
+    echo "$qr_url" >/usr/local/kcptun/mobile_qr_ios_shadowrocket.txt
+}
+
 # # add more kcptun
 add_more_kcptun() {
     bash <(wget -qO- https://raw.githubusercontent.com/devtonull/sskcp/refs/heads/main/kcpadd.sh)
@@ -249,10 +265,12 @@ default_install() {
     install_kcptun
     set_crontab
     set_ufw
-    set_log_ssh
+    # set_log_ssh
     get_shadowsocks_local_config
     get_kcptun_client_config
-    get_mobile_config
+    # get_mobile_config
+    get_mobile_qr_android_shadowsocks_kcptun
+    get_mobile_qr_ios_shadowrocket
 }
 
 echo "Choose install:"
