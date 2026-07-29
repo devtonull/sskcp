@@ -218,7 +218,7 @@ get_shadowsocks_local_config() {
 # # get kcptun config
 get_kcptun_client_config() {
     kcptun_server_config=$(cat /usr/local/kcptun/client-config.json)
-    echo '#### kcptun-client config:'
+    echo '#### kcptun-client json:'
     echo -e "\033[1;33m${kcptun_server_config}\033[0m"
     echo ''
 }
@@ -243,15 +243,28 @@ get_mobile_qr_android_shadowsocks_kcptun() {
     local qrbaseurl=$(echo -n "${method}:${sspwd}" | base64 -w0)
     local qr_url="ss://${qrbaseurl}@$(get_ip):${kcport}?plugin=kcptun%3Bmode%3Dfast%3Bdscp%3D46%3Bsockbuf%3D16777217%3Bcrypt%3Daes%3Bkeepalive%3D10%3Bparityshard%3D30%3Brcvwnd%3D1024%3Binterval%3D40%3Bkey%3D${kcpwd}%3Bsndwnd%3D1024%3Bmtu%3D1350%3Bdatashard%3D70"
     echo "$qr_url" >/usr/local/kcptun/mobile_qr_android_shadowsocks_kcptun.txt
+    # echo '#### android shadowsocks+kcptun apk:'
+    # echo 'https://github.com/devtonull/sskcp/raw/refs/heads/main/src/shadowsocks.apk'
+    # echo 'https://github.com/devtonull/sskcp/raw/refs/heads/main/src/kcptun.apk'
+    # echo ''
+    echo '#### android shadowsocks+kcptun url:'
+    echo -e "\033[1;33m${qr_url}\033[0m"
+    echo ''
 }
 
 # # get mobile qr shadowrocket (ios)
 get_mobile_qr_ios_shadowrocket() {
     local qrbaseurl=$(echo -n "${method}:${sspwd}@$(get_ip):${kcport}" | base64 -w0)
     local qrbaseurl_kcp=`echo -n '{"crypt":"aes","datashard":"70","keepalive":"10","rcvwnd":"1024","dscp":"46","parityshard":"30","autoexpire":"0","key":"'${kcpwd}'","address":"'$(get_ip)'","mode":"fast","nocomp":false,"sndwnd":"1024","smuxver":"1","mtu":"1350","port":"'${kcport}'"}' | base64 -w0`
-    
     local qr_url="ss://${qrbaseurl}?tfo=1&uot=2&kcptun=${qrbaseurl_kcp}"
     echo "$qr_url" >/usr/local/kcptun/mobile_qr_ios_shadowrocket.txt
+    # echo '#### ios shadowrocket app:'
+    # echo 'https://apps.apple.com/us/app/shadowrocket/id932747118'
+    # echo ''
+    echo '#### ios shadowrocket url:'
+    echo -e "\033[1;33m${qr_url}\033[0m"
+    echo ''
+
 }
 
 # # add more kcptun
